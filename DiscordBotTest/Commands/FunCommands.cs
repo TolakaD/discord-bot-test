@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using DiscordBotTest.Attributes;
+using DiscordBotTest.Handlers.Dialogue;
+using DiscordBotTest.Handlers.Dialogue.Steps;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -12,6 +15,7 @@ namespace DiscordBotTest.Commands
     {
         [Command("ping")]
         [Description("Returns 'Pong'")]
+        [RequireCategories(ChannelCheckmode.Any, "Text Channels")]
         public async Task Ping(CommandContext ctx)
         {
             await ctx.Channel.SendMessageAsync("Pong");
@@ -67,6 +71,38 @@ namespace DiscordBotTest.Commands
             var result = await interactivity.CollectReactionsAsync(pollMessage, duration);
             var results = result.Select(r => $"{r.Emoji}: {r.Total}" );
             await ctx.Channel.SendMessageAsync(string.Join("\n", results));
+        }
+
+        [Command("dialogue")]
+        [Description("Starts a new dialogue")]
+        public async Task Dialogue(CommandContext ctx)
+        {
+            var inputStep = new TextDialogueStep("Enter something interesting!", null);
+            var funnyStep = new IntDialogueStep("Haha, that's funny", null, maxValue: 100);
+
+            string input = string.Empty;
+            int value = 0;
+
+            inputStep.OnValidResult += (result) =>
+            {
+                input = result;
+                if (result.Equals("Something interesting", StringComparison.OrdinalIgnoreCase))
+                {
+                    inputStep.SetNextStep(funnyStep);
+                }
+            };
+
+            funnyStep.OnValidResult += (result) => value = result;
+
+            var inputDialogueHandler = new DialogueHandler(ctx.Client, ctx.Channel, ctx.User, inputStep);
+
+            bool succeeded = await inputDialogueHandler.ProcessDialog();
+
+            if(!succeeded)
+                return;
+
+            await ctx.Channel.SendMessageAsync(input);
+            await ctx.Channel.SendMessageAsync(value.ToString());
         }
     }
 }
