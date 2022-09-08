@@ -55,14 +55,5 @@ namespace DiscordBotTest.Commands
 
             await joinMessage.DeleteAsync();
         }
-
-        [Command("additem")]
-        public async Task AddItem(CommandContext ctx, string name)
-        {
-            await _context.Items.AddAsync(new Item { Name = name, Description = "Test Description" });
-            await _context.SaveChangesAsync();
-
-            var result = await _context.Items.ToListAsync();
-        }
     }
 }

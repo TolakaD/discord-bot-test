@@ -1,4 +1,5 @@
-﻿using DiscordBotTest.DAL;
+﻿using DiscordBotTest.Core.Services.Items;
+using DiscordBotTest.DAL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,10 @@ namespace DiscordBotTest
             {
                 options.UseSqlServer("Data Source=localhost;Database=RPGContext;Persist Security Info=True;User ID=sa;Password=Administrator1",
                     x => x.MigrationsAssembly("DiscordBotTest.DAL.Migrations"));
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
+
+            services.AddScoped<IItemService, ItemService>();
 
             var serviceProvider = services.BuildServiceProvider();
             var bot = new Bot(serviceProvider);

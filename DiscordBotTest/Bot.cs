@@ -56,6 +56,7 @@ namespace DiscordBotTest
             Commands.RegisterCommands<TeamCommands>();
             Commands.RegisterCommands<TestRSCommands>();
             Commands.RegisterCommands<TestRSCommandsDropDown>();
+            Commands.RegisterCommands<RPGCommands>();
 
             Client.ConnectAsync();
         }

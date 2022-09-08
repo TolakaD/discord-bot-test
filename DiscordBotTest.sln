@@ -12,6 +12,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscordBotTest.DAL", "Disco
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordBotTest.DAL.Migrations", "DiscordBotTest.DAL.Migrations\DiscordBotTest.DAL.Migrations.csproj", "{5654B1F0-2B02-41B7-81F9-C7DAD7801240}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DiscordBotTest.Core", "DiscordBotTest.Core", "{BF08242E-E48D-4AD6-B7ED-214AD77895EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordBotTest.Core", "DiscordBotTest.Core\DiscordBotTest.Core.csproj", "{D87865C7-5097-4966-B8CE-371005BC1875}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,9 +34,16 @@ Global
 		{5654B1F0-2B02-41B7-81F9-C7DAD7801240}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5654B1F0-2B02-41B7-81F9-C7DAD7801240}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5654B1F0-2B02-41B7-81F9-C7DAD7801240}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D87865C7-5097-4966-B8CE-371005BC1875}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D87865C7-5097-4966-B8CE-371005BC1875}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D87865C7-5097-4966-B8CE-371005BC1875}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D87865C7-5097-4966-B8CE-371005BC1875}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D87865C7-5097-4966-B8CE-371005BC1875} = {BF08242E-E48D-4AD6-B7ED-214AD77895EE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {511FE5A1-DA9B-4AA8-911C-F92705939031}
