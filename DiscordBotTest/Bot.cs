@@ -16,17 +16,13 @@ namespace DiscordBotTest
 {
     public class Bot
     {
-        public DiscordClient Client { get; private set; }
-        public CommandsNextExtension Commands { get; private set; }
-        public InteractivityExtension Interactivity { get; private set; }
-
-        public async Task RunAsync()
+        public Bot(IServiceProvider serviceProvider)
         {
             var json = string.Empty;
 
             using (var fs = File.OpenRead("config.json"))
             using (var sr = new StreamReader(fs, new UTF8Encoding(false)))
-                json = await sr.ReadToEndAsync();
+                json = sr.ReadToEnd();
 
             var configJson = JsonConvert.DeserializeObject<ConfigJson>(json);
             var config = new DiscordConfiguration
@@ -46,12 +42,13 @@ namespace DiscordBotTest
                 ButtonBehavior = ButtonPaginationBehavior.DeleteButtons
             };
             Client.UseInteractivity(interactivityConfig);
-            
+
             var commandsConfig = new CommandsNextConfiguration
             {
-                StringPrefixes = new []{configJson.Prefix},
+                StringPrefixes = new[] { configJson.Prefix },
                 EnableMentionPrefix = true,
                 //EnableDefaultHelp = false --> will allow to build my own custom help command
+                Services = serviceProvider,
             };
 
             Commands = Client.UseCommandsNext(commandsConfig);
@@ -60,9 +57,12 @@ namespace DiscordBotTest
             Commands.RegisterCommands<TestRSCommands>();
             Commands.RegisterCommands<TestRSCommandsDropDown>();
 
-            await Client.ConnectAsync();
-            await Task.Delay(-1);
+            Client.ConnectAsync();
         }
+
+        public DiscordClient Client { get; private set; }
+        public CommandsNextExtension Commands { get; private set; }
+        public InteractivityExtension Interactivity { get; private set; }
 
         private Task OnClientReady(DiscordClient sender, ReadyEventArgs e)
         {

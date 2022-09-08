@@ -1,13 +1,23 @@
 ﻿using System.Threading.Tasks;
+using DiscordBotTest.DAL;
+using DiscordBotTest.DAL.Models.Items;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace DiscordBotTest.Commands
 {
     public class TeamCommands : BaseCommandModule
     {
+        private readonly RPGContext _context;
+
+        public TeamCommands(RPGContext context)
+        {
+            _context = context;
+        }
+
         [Command("join")]
         public async Task Join(CommandContext ctx)
         {
@@ -28,8 +38,8 @@ namespace DiscordBotTest.Commands
             var interactivity = ctx.Client.GetInteractivity();
             var reactionResult = await interactivity.WaitForReactionAsync(
                 x => x.Message == joinMessage &&
-                    x.User == ctx.User &&
-                    (x.Emoji == thumbsUp || x.Emoji == thumbsDown));
+                     x.User == ctx.User &&
+                     (x.Emoji == thumbsUp || x.Emoji == thumbsDown));
 
             var role = ctx.Guild.GetRole(1011357047855530076);
             if (reactionResult.Result.Emoji == thumbsUp)
@@ -44,6 +54,15 @@ namespace DiscordBotTest.Commands
             }
 
             await joinMessage.DeleteAsync();
+        }
+
+        [Command("additem")]
+        public async Task AddItem(CommandContext ctx, string name)
+        {
+            await _context.Items.AddAsync(new Item { Name = name, Description = "Test Description" });
+            await _context.SaveChangesAsync();
+
+            var result = await _context.Items.ToListAsync();
         }
     }
 }

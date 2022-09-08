@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.Entities;
@@ -10,7 +8,6 @@ namespace DiscordBotTest.Handlers.Dialogue.Steps
 {
     public class TextDialogueStep : DialogueStep
     {
-        private readonly string _content;
         private IDialogueStep _nextStep;
         private readonly int? _minLength;
         private readonly int? _maxLength;
@@ -21,7 +18,6 @@ namespace DiscordBotTest.Handlers.Dialogue.Steps
             int? minLength = null,
             int? maxLength = null) : base(content)
         {
-            _content = content;
             _nextStep = nextStep;
             _minLength = minLength;
             _maxLength = maxLength;

@@ -7,7 +7,7 @@ namespace DiscordBotTest.Handlers.Dialogue.Steps
 {
     public abstract class DialogueStep : IDialogueStep
     {
-        private readonly string _content;
+        protected readonly string _content;
 
         protected DialogueStep(string content)
         {

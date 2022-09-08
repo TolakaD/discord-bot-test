@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DiscordBotTest.Attributes;
@@ -103,6 +104,26 @@ namespace DiscordBotTest.Commands
 
             await ctx.Channel.SendMessageAsync(input);
             await ctx.Channel.SendMessageAsync(value.ToString());
+        }
+
+        [Command("emojiidialogue")]
+        [Description("Starts a new emojii dialogue")]
+        public async Task EmojiiDialogue(CommandContext ctx)
+        {
+            var yesStep = new TextDialogueStep("You chose Yes", null);
+            var noStep = new TextDialogueStep("You chose No", null);
+
+            var emojiiStep = new ReactionDialogueStep("Yes or No?", new Dictionary<DiscordEmoji, ReactionStepData>
+            {
+                { DiscordEmoji.FromName(ctx.Client, ":thumbsup:"), new ReactionStepData{Content = "This means YES", NexStep = yesStep} },
+                { DiscordEmoji.FromName(ctx.Client, ":thumbsdown:"), new ReactionStepData{Content = "This means NO", NexStep = noStep} }
+            });
+            var inputDialogueHandler = new DialogueHandler(ctx.Client, ctx.Channel, ctx.User, emojiiStep);
+
+            bool succeeded = await inputDialogueHandler.ProcessDialog();
+
+            if (!succeeded)
+                return;
         }
     }
 }

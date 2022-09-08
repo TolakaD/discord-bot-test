@@ -10,7 +10,6 @@ namespace DiscordBotTest.Handlers.Dialogue.Steps
 {
     public class IntDialogueStep : DialogueStep
     {
-        private readonly string _content;
         private IDialogueStep _nextStep;
         private readonly int? _minValue;
         private readonly int? _maxValue;
@@ -21,7 +20,6 @@ namespace DiscordBotTest.Handlers.Dialogue.Steps
             int? minValue = null,
             int? maxValue = null) : base(content)
         {
-            _content = content;
             _nextStep = nextStep;
             _minValue = minValue;
             _maxValue = maxValue;
