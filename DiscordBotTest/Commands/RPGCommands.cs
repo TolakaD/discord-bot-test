@@ -1,14 +1,10 @@
 ﻿using System.Threading.Tasks;
 using DiscordBotTest.Core.Services.Items;
-using DiscordBotTest.DAL;
 using DiscordBotTest.DAL.Models.Items;
 using DiscordBotTest.Handlers.Dialogue;
 using DiscordBotTest.Handlers.Dialogue.Steps;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-using DSharpPlus.Interactivity.Extensions;
-using Microsoft.EntityFrameworkCore;
 
 namespace DiscordBotTest.Commands
 {
@@ -21,14 +17,26 @@ namespace DiscordBotTest.Commands
             _itemService = itemService;
         }
 
-        //[Command("additem")]
-        //public async Task AddItem(CommandContext ctx, string name)
-        //{
-        //    await _itemService.Items.AddAsync(new Item { Name = name, Description = "Test Description" });
-        //    await _itemService.SaveChangesAsync();
+        [Command("createitem")]
+        [RequireRoles(RoleCheckMode.Any, "Admin")]
+        public async Task CreateItem(CommandContext ctx)
+        {
+            var itemDescriptionStep = new TextDialogueStep("What is the item description?", null);
+            var itemNameStep = new TextDialogueStep("What will the item be called?", itemDescriptionStep);
 
-        //    var result = await _itemService.Items.ToListAsync();
-        //}
+            var item = new Item();
+
+            itemNameStep.OnValidResult += (result) => item.Name = result;
+            itemDescriptionStep.OnValidResult += (result) => item.Description = result;
+
+            var dialogueHandler = new DialogueHandler(ctx.Client, ctx.Channel, ctx.User, itemNameStep);
+            bool succeeded = await dialogueHandler.ProcessDialog();
+            if (!succeeded) { return; }
+
+            await _itemService.CreateNewItemAsync(item);
+            
+            await ctx.Channel.SendMessageAsync($"Item with Name: {item.Name} and Description: {item.Description} was successfully created");
+        }
 
         [Command("iteminfo")]
         public async Task ItemInfo(CommandContext ctx)

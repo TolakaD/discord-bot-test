@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DiscordBotTest.DAL;
 using DiscordBotTest.DAL.Models.Items;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +8,7 @@ namespace DiscordBotTest.Core.Services.Items
     public interface IItemService
     {
         Task<Item> GetItemByName(string itemName);
+        Task CreateNewItemAsync(Item item);
     }
 
     public class ItemService : IItemService
@@ -24,6 +24,12 @@ namespace DiscordBotTest.Core.Services.Items
         {
             itemName = itemName.ToLower();
             return await _context.Items.FirstOrDefaultAsync(i => i.Name.ToLower() == itemName);
+        }
+
+        public async Task CreateNewItemAsync(Item item)
+        {
+            await _context.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
     }
 }
